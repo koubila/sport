@@ -1,252 +1,242 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Programme Interactif</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: "Stone & Amber" - a calm, neutral palette with a warm accent. -->
-    <!-- Application Structure Plan: A dashboard-style single-page application. The core interaction is a week selector (buttons for Semaine 1, 2, 3) that dynamically updates the main content. The main content area displays the 7 days of the selected week as individual cards for clarity. This structure is chosen for usability, allowing the user to focus on a specific week and day, which is more practical than a large, static table. A summary chart provides a quick visual overview of the weekly effort. This is designed to be more engaging and motivating than a simple text document. -->
-    <!-- Visualization & Content Choices: 
-        - Report Info: Weekly schedule table -> Goal: Organize/Inform -> Viz/Presentation: Interactive Daily Cards (HTML/CSS/JS) -> Interaction: Week selection buttons dynamically filter and display the correct daily plan -> Justification: Cards for each day are easier to read on mobile and desktop, and interaction makes the plan feel less static and more like a personal tool.
-        - Report Info: Types of sport activities per week -> Goal: Compare/Summarize -> Viz/Presentation: Donut Chart (Chart.js) -> Interaction: The chart updates when a new week is selected -> Justification: Provides a quick, visual summary of the training focus for the week (e.g., more musculation in week 2), which helps in understanding the progression at a glance.
-        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. 
-    -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f5f4; /* stone-100 */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
-        }
-        .week-btn {
-            transition: all 0.3s ease;
-        }
-        .week-btn.active {
-            background-color: #d97706; /* amber-600 */
-            color: white;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protocole de relance hormonale – 21 jours</title>
+  <meta name="description" content="Checklist imprimable et interactive pour 21 jours : habitudes, sport, nutrition, progression." />
+  <style>
+    :root{
+      --bg:#0f172a; /* slate-900 */
+      --card:#111827; /* gray-900 */
+      --muted:#94a3b8; /* slate-400 */
+      --text:#e5e7eb; /* gray-200 */
+      --accent:#22c55e; /* green-500 */
+      --accent-2:#38bdf8; /* sky-400 */
+      --danger:#ef4444; /* red-500 */
+      --ring: rgba(34,197,94,.35);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background:linear-gradient(180deg, rgba(15,23,42,1) 0%, rgba(2,6,23,1) 100%);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:20; backdrop-filter:saturate(140%) blur(8px);
+      background:rgba(2,6,23,.7); border-bottom:1px solid rgba(148,163,184,.1);
+    }
+    .container{max-width:1100px; margin:0 auto; padding: 16px 20px}
+    h1{font-size: clamp(22px, 3vw, 34px); margin:10px 0 6px; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:14px}
+
+    .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px}
+    .btn{appearance:none; border:1px solid rgba(148,163,184,.2); padding:10px 14px; border-radius:14px; background:var(--card); color:var(--text); cursor:pointer; box-shadow: var(--shadow);
+      transition: transform .06s ease, border-color .2s ease, box-shadow .2s ease}
+    .btn:hover{transform: translateY(-1px); border-color: rgba(148,163,184,.35)}
+    .btn:active{transform: translateY(0)}
+    .btn.primary{border-color: transparent; background: linear-gradient(135deg, var(--accent), #16a34a); color:#052e16}
+    .btn.warn{background: linear-gradient(135deg, var(--danger), #b91c1c); color:#1c0202; border-color: transparent}
+    .btn.ghost{background:transparent}
+
+    .progress{
+      width:100%; height:14px; background: rgba(148,163,184,.15); border-radius:999px; overflow:hidden; border:1px solid rgba(148,163,184,.15)
+    }
+    .bar{height:100%; width:0%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .4s ease}
+
+    .grid{display:grid; grid-template-columns: 1fr; gap:12px; margin-top:16px}
+    @media(min-width:720px){ .grid{ grid-template-columns: repeat(2, 1fr);} }
+    @media(min-width:1024px){ .grid{ grid-template-columns: repeat(3, 1fr);} }
+
+    .card{
+      background: linear-gradient(180deg, rgba(17,24,39,.8), rgba(15,23,42,.8));
+      border:1px solid rgba(148,163,184,.15);
+      border-radius:18px; padding:14px; box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px
+    }
+    .day{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .day strong{font-size:18px}
+    .pill{font-size:12px; color:#031b0f; background:linear-gradient(135deg, var(--accent), #16a34a); padding:6px 10px; border-radius:999px; border:1px solid rgba(0,0,0,.15)}
+
+    .section-title{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
+    .list{display:flex; flex-direction:column; gap:8px}
+    label.chk{display:flex; align-items:flex-start; gap:10px; cursor:pointer; border:1px solid rgba(148,163,184,.12); padding:10px; border-radius:12px; background:rgba(2,6,23,.35)}
+    .chk input{margin-top:2px}
+    .muted{color:var(--muted)}
+
+    footer{opacity:.8; font-size:12px; text-align:center; margin:28px 0}
+
+    /* Print styles */
+    @media print{
+      header .toolbar, .no-print{display:none !important}
+      body{background:white; color:#111827}
+      .card{box-shadow:none; background:white; border-color:#e5e7eb}
+      .pill{color:white; background:#16a34a}
+    }
+  </style>
 </head>
-<body class="text-stone-800">
-
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-        
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Mon Programme Hebdomadaire</h1>
-            <p class="mt-2 text-lg text-stone-600">Objectif : Prise de muscle et perte de poids.</p>
-        </header>
-
-        <div id="week-selector" class="flex justify-center space-x-2 sm:space-x-4 mb-8">
-            <button class="week-btn text-sm sm:text-base font-semibold py-2 px-4 rounded-full bg-white shadow-sm" data-week="1">Semaine 1</button>
-            <button class="week-btn text-sm sm:text-base font-semibold py-2 px-4 rounded-full bg-white shadow-sm" data-week="2">Semaine 2</button>
-            <button class="week-btn text-sm sm:text-base font-semibold py-2 px-4 rounded-full bg-white shadow-sm" data-week="3">Semaine 3</button>
+<body>
+  <header>
+    <div class="container">
+      <h1>Protocole de relance hormonale – 21 jours</h1>
+      <p class="sub">Checklist interactive : habitudes, sport, nutrition. Cible : relancer l'énergie, réguler l'appétit et remettre le corps en mouvement.</p>
+      <div class="toolbar">
+        <button id="printBtn" class="btn" aria-label="Imprimer"><span>🖨️ Imprimer</span></button>
+        <button id="resetBtn" class="btn warn" aria-label="Réinitialiser les cases"><span>♻️ Réinitialiser</span></button>
+        <button id="expandBtn" class="btn ghost" aria-label="Déplier/Replier tout"><span>🗂️ Déplier tout</span></button>
+        <div style="flex:1"></div>
+        <div style="min-width:220px">
+          <div class="progress" aria-label="Progression totale" title="Progression">
+            <div id="progressBar" class="bar"></div>
+          </div>
+          <div class="sub" style="margin-top:6px"><span id="progressText">0%</span> complété</div>
         </div>
-
-        <main>
-            <div id="plan-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            </div>
-
-            <section class="bg-white rounded-xl shadow-lg p-6 mb-12">
-                <h2 class="text-2xl font-bold text-center mb-4 text-stone-900">Répartition des Activités de la Semaine</h2>
-                <div class="chart-container">
-                    <canvas id="activityChart"></canvas>
-                </div>
-            </section>
-
-            <section id="general-rules" class="bg-amber-50 border-l-4 border-amber-500 text-amber-800 p-6 rounded-r-lg">
-                <h2 class="text-2xl font-bold mb-4">Règles Générales à Respecter</h2>
-                <ul class="space-y-3 list-disc list-inside">
-                    <li><span class="font-semibold">Activité minimale :</span> Aucun jour 100% inactif. Au minimum, 20 minutes de marche ou de mobilité.</li>
-                    <li><span class="font-semibold">Hydratation :</span> Boire au moins 2 litres d'eau par jour.</li>
-                    <li><span class="font-semibold">Nutrition :</span> Limiter le sucre rapide à un maximum de 2 fois par semaine.</li>
-                    <li><span class="font-semibold">Sommeil :</span> Se coucher à heure fixe, 7 heures de sommeil minimum.</li>
-                </ul>
-            </section>
-        </main>
-
+      </div>
     </div>
+  </header>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const planContainer = document.getElementById('plan-container');
-            const weekSelector = document.getElementById('week-selector');
-            let activityChart;
-            let currentWeek = 1;
+  <main class="container">
+    <div id="cards" class="grid" aria-live="polite"></div>
+    <footer>Astuce : un jour = <strong>aucun 100% inactif</strong>. Même 10 minutes comptent.</footer>
+  </main>
 
-            const programData = {
-                base: [
-                    { day: 'Lundi', habit: '5 min lumière matin, 500 ml eau', sport: { type: 'Circuit', details: '20 min (10 squats + 10 pompes + 10 abdos) × 5' }, nutrition: 'Pas de sucre rapide' },
-                    { day: 'Mardi', habit: 'Douche froide 30 sec', sport: { type: 'Cardio', details: 'Marche rapide 20 min' }, nutrition: 'Petit-déj riche en protéines' },
-                    { day: 'Mercredi', habit: '5 min étirements soir', sport: { type: 'Musculation', details: 'Lourde jambes/dos 30 min' }, nutrition: 'Ajout bons lipides à chaque repas' },
-                    { day: 'Jeudi', habit: 'Lumière matin, pause dehors midi', sport: { type: 'HIIT', details: '30 sec effort / 30 sec repos × 10' }, nutrition: 'Limiter féculents le soir' },
-                    { day: 'Vendredi', habit: 'Douche froide + hydratation matin', sport: { type: 'Musculation', details: 'Lourde haut du corps 30 min' }, nutrition: 'Protéines + légumes dominants' },
-                    { day: 'Samedi', habit: 'Pause active après repas', sport: { type: 'Plaisir', details: 'Escalade, vélo, marche' }, nutrition: 'Pas d’alcool' },
-                    { day: 'Dimanche', habit: 'Sommeil réparateur (lever naturel)', sport: { type: 'Mobilité', details: 'Yoga ou étirements 20 min' }, nutrition: 'Repas libre mais pas d’excès sucrés' }
-                ],
-                mods: {
-                    week2: (plan) => {
-                        let newPlan = JSON.parse(JSON.stringify(plan));
-                        newPlan.forEach(day => {
-                            if (day.habit.includes('Douche froide')) day.habit = 'Douche froide 1 min';
-                            day.habit += ' | 10 min mobilité soir';
-                        });
-                        newPlan[1].sport = { type: 'Musculation', details: 'Séance supplémentaire' };
-                        return newPlan;
-                    },
-                    week3: (plan) => {
-                        let newPlan = JSON.parse(JSON.stringify(programData.mods.week2(plan)));
-                        newPlan.forEach(day => {
-                            if (day.day === 'Lundi' || day.day === 'Mercredi') day.nutrition += ' | Jeûne intermittent (20h-12h)';
-                        });
-                        newPlan[2].sport.details = 'Jambes/dos plus lourde';
-                        newPlan[3].sport.details = 'HIIT plus long (40 sec effort / 20 sec repos × 12)';
-                        newPlan[5].sport.details = 'Essayer quelque chose de nouveau';
-                        return newPlan;
-                    }
-                }
-            };
+  <template id="cardTemplate">
+    <article class="card">
+      <div class="day">
+        <strong class="title">Jour X</strong>
+        <span class="pill">Semaine <span class="week">1</span></span>
+      </div>
+      <details>
+        <summary class="section-title">Habitudes</summary>
+        <div class="list habits"></div>
+      </details>
+      <details>
+        <summary class="section-title">Sport</summary>
+        <div class="list sports"></div>
+      </details>
+      <details open>
+        <summary class="section-title">Nutrition</summary>
+        <div class="list food"></div>
+      </details>
+    </article>
+  </template>
 
-            const icons = {
-                Habit: '✨',
-                Sport: '💪',
-                Nutrition: '🍎'
-            };
+  <script>
+    // --- Données du plan (21 jours) ---
+    // Semaine 1 : réveil du système
+    const week1 = [
+      {h:["Lumière du matin 5–10 min", "500 ml d'eau avant café", "Coucher/réveil réguliers"], s:["Circuit 20 min : 10 squats + 10 pompes + 10 abdos ×5"], f:["Pas de sucres rapides"]},
+      {h:["Douche froide 30–60 sec"], s:["Marche rapide 20 min"], f:["Petit-déj riche en protéines"]},
+      {h:["5 min d'étirements le soir"], s:["Muscu jambes/dos 30 min (modéré)"], f:["Bons lipides à chaque repas"]},
+      {h:["Pause dehors après déjeuner"], s:["HIIT 30"+'/'+'30 × 10'], f:["Limiter féculents le soir"]},
+      {h:["Hydratation 2 L/jour"], s:["Muscu haut du corps 30 min"], f:["Protéines + légumes dominants"]},
+      {h:["Pause active après repas"], s:["Activité plaisir : escalade / vélo / rando"], f:["Pas d'alcool"]},
+      {h:["Lever naturel, sommeil réparateur"], s:["Mobilité / yoga 20 min"], f:["Repas libre sans excès sucrés"]},
+    ];
 
-            function renderPlan(week) {
-                let planToRender;
-                if (week === 1) {
-                    planToRender = programData.base;
-                } else if (week === 2) {
-                    planToRender = programData.mods.week2(programData.base);
-                } else {
-                    planToRender = programData.mods.week3(programData.base);
-                }
+    // Semaine 2 : activation hormonale (progression)
+    const week2 = [
+      {h:["Lumière du matin", "500 ml d'eau"], s:["Muscu 30 min (supplémentaire)"], f:["Petit-déj riche en protéines"]},
+      {h:["Douche froide 1 min", "10 min mobilité soir"], s:["Muscu jambes/dos 30 min"], f:["Bons lipides à chaque repas"]},
+      {h:["10 min mobilité soir"], s:["HIIT 30"+'/'+'30 × 12"], f:["Limiter féculents le soir"]},
+      {h:["Pause dehors midi"], s:["Muscu haut du corps 30 min"], f:["Protéines + légumes"]},
+      {h:["Hydratation 2 L", "10 min mobilité soir"], s:["Marche rapide 25 min"], f:["Pas de sucres rapides"]},
+      {h:["Pause active après repas"], s:["Activité plaisir (extérieur)"], f:["Pas d'alcool"]},
+      {h:["Sommeil régulier"], s:["Mobilité / étirements 25 min"], f:["Repas libre contrôlé"]},
+    ];
 
-                planContainer.innerHTML = '';
-                planToRender.forEach(dayData => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white rounded-xl shadow-lg p-5 flex flex-col space-y-4 transform hover:scale-105 transition-transform duration-300';
-                    card.innerHTML = `
-                        <h3 class="text-xl font-bold text-stone-900 border-b-2 border-amber-500 pb-2">${dayData.day}</h3>
-                        <div class="flex items-start space-x-3">
-                            <span class="text-xl">${icons.Habit}</span>
-                            <div>
-                                <h4 class="font-semibold text-stone-700">Habitudes</h4>
-                                <p class="text-stone-600">${dayData.habit}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <span class="text-xl">${icons.Sport}</span>
-                            <div>
-                                <h4 class="font-semibold text-stone-700">Sport (${dayData.sport.type})</h4>
-                                <p class="text-stone-600">${dayData.sport.details}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <span class="text-xl">${icons.Nutrition}</span>
-                            <div>
-                                <h4 class="font-semibold text-stone-700">Nutrition</h4>
-                                <p class="text-stone-600">${dayData.nutrition}</p>
-                            </div>
-                        </div>
-                    `;
-                    planContainer.appendChild(card);
-                });
-                updateChart(planToRender);
-                updateActiveButton(week);
-            }
+    // Semaine 3 : montée en puissance
+    const week3 = [
+      {h:["Jeûne 20h→12h (option)"], s:["Muscu jambes/dos (plus lourd)"], f:["Bons lipides à chaque repas"]},
+      {h:["Lumière matin, 10 min marche après déjeuner"], s:["HIIT 40"+'/'+'20 × 12"], f:["Limiter féculents le soir"]},
+      {h:["Hydratation 2 L"], s:["Muscu haut du corps 35–40 min"], f:["Protéines + légumes"]},
+      {h:["Douche froide 1–2 min"], s:["Séance challenge (CrossFit / escalade difficile)"], f:["Glucides contrôlés"]},
+      {h:["10 min mobilité soir"], s:["Marche active 30 min"], f:["Pas de sucres rapides"]},
+      {h:["Pause active"], s:["Activité plaisir nouvelle (sortie nature)"], f:["Pas d'alcool"]},
+      {h:["Sommeil réparateur"], s:["Mobilité / respiration 20 min"], f:["Repas libre sans excès"]},
+    ];
 
-            function updateChart(planData) {
-                const ctx = document.getElementById('activityChart').getContext('2d');
-                const activityCounts = planData.reduce((acc, day) => {
-                    const type = day.sport.type;
-                    acc[type] = (acc[type] || 0) + 1;
-                    return acc;
-                }, {});
+    const plan = [...week1, ...week2, ...week3];
 
-                const labels = Object.keys(activityCounts);
-                const data = Object.values(activityCounts);
+    // --- Rendu ---
+    const cardsEl = document.getElementById('cards');
+    const tpl = document.getElementById('cardTemplate');
 
-                if (activityChart) {
-                    activityChart.destroy();
-                }
+    function keyFor(i){ return `proto21_day_${i}` }
 
-                activityChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Séances par type',
-                            data: data,
-                            backgroundColor: [
-                                'rgba(239, 68, 68, 0.7)',   // red-500
-                                'rgba(59, 130, 246, 0.7)',  // blue-500
-                                'rgba(245, 158, 11, 0.7)',  // amber-500
-                                'rgba(34, 197, 94, 0.7)',   // green-500
-                                'rgba(139, 92, 246, 0.7)',  // violet-500
-                            ],
-                            borderColor: '#ffffff',
-                            borderWidth: 3
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    color: '#44403c', // stone-700
-                                    font: {
-                                        size: 14,
-                                        family: 'Inter'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            function updateActiveButton(week) {
-                document.querySelectorAll('.week-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if(parseInt(btn.dataset.week) === week) {
-                        btn.classList.add('active');
-                    }
-                });
-            }
+    function createItemCheckbox(text, dayIndex){
+      const id = `${keyFor(dayIndex)}_${text.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`;
+      const wrap = document.createElement('label');
+      wrap.className = 'chk';
+      wrap.innerHTML = `<input type="checkbox" id="${id}" aria-label="${text}" /> <span>${text}</span>`;
+      const input = wrap.querySelector('input');
+      input.addEventListener('change', () => saveDay(dayIndex));
+      return wrap;
+    }
 
-            weekSelector.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') {
-                    const week = parseInt(e.target.dataset.week);
-                    if (week !== currentWeek) {
-                        currentWeek = week;
-                        renderPlan(currentWeek);
-                    }
-                }
-            });
+    function saveDay(i){
+      const card = cardsEl.children[i];
+      const checks = [...card.querySelectorAll('input[type="checkbox"]')].map(c=>c.checked);
+      localStorage.setItem(keyFor(i), JSON.stringify(checks));
+      updateProgress();
+    }
 
-            renderPlan(currentWeek);
-        });
-    </script>
+    function loadDay(i){
+      const raw = localStorage.getItem(keyFor(i));
+      return raw ? JSON.parse(raw) : null;
+    }
+
+    function render(){
+      cardsEl.innerHTML = '';
+      plan.forEach((day, i) => {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.title').textContent = `Jour ${i+1}`;
+        node.querySelector('.week').textContent = (i<7?1:(i<14?2:3));
+        const hWrap = node.querySelector('.habits');
+        const sWrap = node.querySelector('.sports');
+        const fWrap = node.querySelector('.food');
+        day.h.forEach(t => hWrap.appendChild(createItemCheckbox(t, i)));
+        day.s.forEach(t => sWrap.appendChild(createItemCheckbox(t, i)));
+        day.f.forEach(t => fWrap.appendChild(createItemCheckbox(t, i)));
+        cardsEl.appendChild(node);
+        // after mount, restore state
+        const saved = loadDay(i);
+        if (saved){
+          const inputs = cardsEl.children[i].querySelectorAll('input[type="checkbox"]');
+          inputs.forEach((el, idx)=>{ el.checked = !!saved[idx]; });
+        }
+      });
+      updateProgress();
+    }
+
+    function updateProgress(){
+      const allChecks = [...document.querySelectorAll('input[type="checkbox"]')];
+      const done = allChecks.filter(c=>c.checked).length;
+      const pct = allChecks.length ? Math.round(done / allChecks.length * 100) : 0;
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressText').textContent = pct + '%';
+    }
+
+    // --- Actions ---
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if(confirm('Réinitialiser toutes les cases cochées ?')){
+        for(let i=0;i<plan.length;i++) localStorage.removeItem(keyFor(i));
+        render();
+      }
+    });
+
+    let expanded = true;
+    document.getElementById('expandBtn').addEventListener('click', e => {
+      expanded = !expanded;
+      e.currentTarget.innerHTML = expanded ? '🗂️ Replier tout' : '🗂️ Déplier tout';
+      document.querySelectorAll('#cards details').forEach(d => d.open = expanded);
+    });
+
+    // init
+    render();
+  </script>
 </body>
 </html>
