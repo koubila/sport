@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocole Relance Hormonale – 21 Jours</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    section {
+      background: white;
+      margin: 20px auto;
+      padding: 15px;
+      max-width: 800px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+    input[type=checkbox] {
+      margin-right: 10px;
+    }
+    .buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Protocole de Relance Hormonale – 21 Jours</h1>
+
+  <section id="week-plan">
+    <h2>Semaine Type</h2>
+    <ul>
+      <li><input type="checkbox">Lundi: Lumière matin + 500ml eau, Circuit 20min, Pas de sucre rapide</li>
+      <li><input type="checkbox">Mardi: Douche froide 30s, Marche rapide 20min, Petit-déj protéiné</li>
+      <li><input type="checkbox">Mercredi: Muscu jambes/dos 30min, Bons lipides à chaque repas</li>
+      <li><input type="checkbox">Jeudi: HIIT 30s/30s ×10, Limiter féculents soir</li>
+      <li><input type="checkbox">Vendredi: Muscu haut du corps 30min, Protéines + légumes</li>
+      <li><input type="checkbox">Samedi: Activité plaisir, Pas d’alcool</li>
+      <li><input type="checkbox">Dimanche: Mobilité/Yoga 20min, Repas libre sans excès</li>
+    </ul>
+  </section>
+
+  <div class="buttons">
+    <button onclick="resetChecklist()">Réinitialiser</button>
+    <button onclick="window.print()">Imprimer</button>
+  </div>
+
+  <script>
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    // Charger l'état des cases
+    checkboxes.forEach((cb, i) => {
+      cb.checked = localStorage.getItem('day' + i) === 'true';
+      cb.addEventListener('change', () => {
+        localStorage.setItem('day' + i, cb.checked);
+      });
+    });
+
+    function resetChecklist() {
+      checkboxes.forEach((cb, i) => {
+        cb.checked = false;
+        localStorage.removeItem('day' + i);
+      });
+    }
+  </script>
+</body>
+</html>
