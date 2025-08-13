@@ -1,242 +1,96 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Protocole de relance hormonale – 21 jours</title>
-  <meta name="description" content="Checklist imprimable et interactive pour 21 jours : habitudes, sport, nutrition, progression." />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocole Relance Hormonale – 21 Jours</title>
   <style>
-    :root{
-      --bg:#0f172a; /* slate-900 */
-      --card:#111827; /* gray-900 */
-      --muted:#94a3b8; /* slate-400 */
-      --text:#e5e7eb; /* gray-200 */
-      --accent:#22c55e; /* green-500 */
-      --accent-2:#38bdf8; /* sky-400 */
-      --danger:#ef4444; /* red-500 */
-      --ring: rgba(34,197,94,.35);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background:linear-gradient(180deg, rgba(15,23,42,1) 0%, rgba(2,6,23,1) 100%);
-      color:var(--text);
+    h1, h2 {
+      text-align: center;
     }
-    header{
-      position:sticky; top:0; z-index:20; backdrop-filter:saturate(140%) blur(8px);
-      background:rgba(2,6,23,.7); border-bottom:1px solid rgba(148,163,184,.1);
+    section {
+      background: white;
+      margin: 20px auto;
+      padding: 15px;
+      max-width: 800px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .container{max-width:1100px; margin:0 auto; padding: 16px 20px}
-    h1{font-size: clamp(22px, 3vw, 34px); margin:10px 0 6px; letter-spacing:.2px}
-    .sub{color:var(--muted); font-size:14px}
-
-    .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px}
-    .btn{appearance:none; border:1px solid rgba(148,163,184,.2); padding:10px 14px; border-radius:14px; background:var(--card); color:var(--text); cursor:pointer; box-shadow: var(--shadow);
-      transition: transform .06s ease, border-color .2s ease, box-shadow .2s ease}
-    .btn:hover{transform: translateY(-1px); border-color: rgba(148,163,184,.35)}
-    .btn:active{transform: translateY(0)}
-    .btn.primary{border-color: transparent; background: linear-gradient(135deg, var(--accent), #16a34a); color:#052e16}
-    .btn.warn{background: linear-gradient(135deg, var(--danger), #b91c1c); color:#1c0202; border-color: transparent}
-    .btn.ghost{background:transparent}
-
-    .progress{
-      width:100%; height:14px; background: rgba(148,163,184,.15); border-radius:999px; overflow:hidden; border:1px solid rgba(148,163,184,.15)
+    ul {
+      list-style: none;
+      padding: 0;
     }
-    .bar{height:100%; width:0%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .4s ease}
-
-    .grid{display:grid; grid-template-columns: 1fr; gap:12px; margin-top:16px}
-    @media(min-width:720px){ .grid{ grid-template-columns: repeat(2, 1fr);} }
-    @media(min-width:1024px){ .grid{ grid-template-columns: repeat(3, 1fr);} }
-
-    .card{
-      background: linear-gradient(180deg, rgba(17,24,39,.8), rgba(15,23,42,.8));
-      border:1px solid rgba(148,163,184,.15);
-      border-radius:18px; padding:14px; box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px
+    li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
     }
-    .day{display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .day strong{font-size:18px}
-    .pill{font-size:12px; color:#031b0f; background:linear-gradient(135deg, var(--accent), #16a34a); padding:6px 10px; border-radius:999px; border:1px solid rgba(0,0,0,.15)}
-
-    .section-title{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted)}
-    .list{display:flex; flex-direction:column; gap:8px}
-    label.chk{display:flex; align-items:flex-start; gap:10px; cursor:pointer; border:1px solid rgba(148,163,184,.12); padding:10px; border-radius:12px; background:rgba(2,6,23,.35)}
-    .chk input{margin-top:2px}
-    .muted{color:var(--muted)}
-
-    footer{opacity:.8; font-size:12px; text-align:center; margin:28px 0}
-
-    /* Print styles */
-    @media print{
-      header .toolbar, .no-print{display:none !important}
-      body{background:white; color:#111827}
-      .card{box-shadow:none; background:white; border-color:#e5e7eb}
-      .pill{color:white; background:#16a34a}
+    input[type=checkbox] {
+      margin-right: 10px;
+    }
+    .buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Protocole de relance hormonale – 21 jours</h1>
-      <p class="sub">Checklist interactive : habitudes, sport, nutrition. Cible : relancer l'énergie, réguler l'appétit et remettre le corps en mouvement.</p>
-      <div class="toolbar">
-        <button id="printBtn" class="btn" aria-label="Imprimer"><span>🖨️ Imprimer</span></button>
-        <button id="resetBtn" class="btn warn" aria-label="Réinitialiser les cases"><span>♻️ Réinitialiser</span></button>
-        <button id="expandBtn" class="btn ghost" aria-label="Déplier/Replier tout"><span>🗂️ Déplier tout</span></button>
-        <div style="flex:1"></div>
-        <div style="min-width:220px">
-          <div class="progress" aria-label="Progression totale" title="Progression">
-            <div id="progressBar" class="bar"></div>
-          </div>
-          <div class="sub" style="margin-top:6px"><span id="progressText">0%</span> complété</div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <h1>Protocole de Relance Hormonale – 21 Jours</h1>
 
-  <main class="container">
-    <div id="cards" class="grid" aria-live="polite"></div>
-    <footer>Astuce : un jour = <strong>aucun 100% inactif</strong>. Même 10 minutes comptent.</footer>
-  </main>
+  <section id="week-plan">
+    <h2>Semaine Type</h2>
+    <ul>
+      <li><input type="checkbox">Lundi: Lumière matin + 500ml eau, Circuit 20min, Pas de sucre rapide</li>
+      <li><input type="checkbox">Mardi: Douche froide 30s, Marche rapide 20min, Petit-déj protéiné</li>
+      <li><input type="checkbox">Mercredi: Muscu jambes/dos 30min, Bons lipides à chaque repas</li>
+      <li><input type="checkbox">Jeudi: HIIT 30s/30s ×10, Limiter féculents soir</li>
+      <li><input type="checkbox">Vendredi: Muscu haut du corps 30min, Protéines + légumes</li>
+      <li><input type="checkbox">Samedi: Activité plaisir, Pas d’alcool</li>
+      <li><input type="checkbox">Dimanche: Mobilité/Yoga 20min, Repas libre sans excès</li>
+    </ul>
+  </section>
 
-  <template id="cardTemplate">
-    <article class="card">
-      <div class="day">
-        <strong class="title">Jour X</strong>
-        <span class="pill">Semaine <span class="week">1</span></span>
-      </div>
-      <details>
-        <summary class="section-title">Habitudes</summary>
-        <div class="list habits"></div>
-      </details>
-      <details>
-        <summary class="section-title">Sport</summary>
-        <div class="list sports"></div>
-      </details>
-      <details open>
-        <summary class="section-title">Nutrition</summary>
-        <div class="list food"></div>
-      </details>
-    </article>
-  </template>
+  <div class="buttons">
+    <button onclick="resetChecklist()">Réinitialiser</button>
+    <button onclick="window.print()">Imprimer</button>
+  </div>
 
   <script>
-    // --- Données du plan (21 jours) ---
-    // Semaine 1 : réveil du système
-    const week1 = [
-      {h:["Lumière du matin 5–10 min", "500 ml d'eau avant café", "Coucher/réveil réguliers"], s:["Circuit 20 min : 10 squats + 10 pompes + 10 abdos ×5"], f:["Pas de sucres rapides"]},
-      {h:["Douche froide 30–60 sec"], s:["Marche rapide 20 min"], f:["Petit-déj riche en protéines"]},
-      {h:["5 min d'étirements le soir"], s:["Muscu jambes/dos 30 min (modéré)"], f:["Bons lipides à chaque repas"]},
-      {h:["Pause dehors après déjeuner"], s:["HIIT 30"+'/'+'30 × 10'], f:["Limiter féculents le soir"]},
-      {h:["Hydratation 2 L/jour"], s:["Muscu haut du corps 30 min"], f:["Protéines + légumes dominants"]},
-      {h:["Pause active après repas"], s:["Activité plaisir : escalade / vélo / rando"], f:["Pas d'alcool"]},
-      {h:["Lever naturel, sommeil réparateur"], s:["Mobilité / yoga 20 min"], f:["Repas libre sans excès sucrés"]},
-    ];
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
-    // Semaine 2 : activation hormonale (progression)
-    const week2 = [
-      {h:["Lumière du matin", "500 ml d'eau"], s:["Muscu 30 min (supplémentaire)"], f:["Petit-déj riche en protéines"]},
-      {h:["Douche froide 1 min", "10 min mobilité soir"], s:["Muscu jambes/dos 30 min"], f:["Bons lipides à chaque repas"]},
-      {h:["10 min mobilité soir"], s:["HIIT 30"+'/'+'30 × 12"], f:["Limiter féculents le soir"]},
-      {h:["Pause dehors midi"], s:["Muscu haut du corps 30 min"], f:["Protéines + légumes"]},
-      {h:["Hydratation 2 L", "10 min mobilité soir"], s:["Marche rapide 25 min"], f:["Pas de sucres rapides"]},
-      {h:["Pause active après repas"], s:["Activité plaisir (extérieur)"], f:["Pas d'alcool"]},
-      {h:["Sommeil régulier"], s:["Mobilité / étirements 25 min"], f:["Repas libre contrôlé"]},
-    ];
-
-    // Semaine 3 : montée en puissance
-    const week3 = [
-      {h:["Jeûne 20h→12h (option)"], s:["Muscu jambes/dos (plus lourd)"], f:["Bons lipides à chaque repas"]},
-      {h:["Lumière matin, 10 min marche après déjeuner"], s:["HIIT 40"+'/'+'20 × 12"], f:["Limiter féculents le soir"]},
-      {h:["Hydratation 2 L"], s:["Muscu haut du corps 35–40 min"], f:["Protéines + légumes"]},
-      {h:["Douche froide 1–2 min"], s:["Séance challenge (CrossFit / escalade difficile)"], f:["Glucides contrôlés"]},
-      {h:["10 min mobilité soir"], s:["Marche active 30 min"], f:["Pas de sucres rapides"]},
-      {h:["Pause active"], s:["Activité plaisir nouvelle (sortie nature)"], f:["Pas d'alcool"]},
-      {h:["Sommeil réparateur"], s:["Mobilité / respiration 20 min"], f:["Repas libre sans excès"]},
-    ];
-
-    const plan = [...week1, ...week2, ...week3];
-
-    // --- Rendu ---
-    const cardsEl = document.getElementById('cards');
-    const tpl = document.getElementById('cardTemplate');
-
-    function keyFor(i){ return `proto21_day_${i}` }
-
-    function createItemCheckbox(text, dayIndex){
-      const id = `${keyFor(dayIndex)}_${text.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`;
-      const wrap = document.createElement('label');
-      wrap.className = 'chk';
-      wrap.innerHTML = `<input type="checkbox" id="${id}" aria-label="${text}" /> <span>${text}</span>`;
-      const input = wrap.querySelector('input');
-      input.addEventListener('change', () => saveDay(dayIndex));
-      return wrap;
-    }
-
-    function saveDay(i){
-      const card = cardsEl.children[i];
-      const checks = [...card.querySelectorAll('input[type="checkbox"]')].map(c=>c.checked);
-      localStorage.setItem(keyFor(i), JSON.stringify(checks));
-      updateProgress();
-    }
-
-    function loadDay(i){
-      const raw = localStorage.getItem(keyFor(i));
-      return raw ? JSON.parse(raw) : null;
-    }
-
-    function render(){
-      cardsEl.innerHTML = '';
-      plan.forEach((day, i) => {
-        const node = tpl.content.cloneNode(true);
-        node.querySelector('.title').textContent = `Jour ${i+1}`;
-        node.querySelector('.week').textContent = (i<7?1:(i<14?2:3));
-        const hWrap = node.querySelector('.habits');
-        const sWrap = node.querySelector('.sports');
-        const fWrap = node.querySelector('.food');
-        day.h.forEach(t => hWrap.appendChild(createItemCheckbox(t, i)));
-        day.s.forEach(t => sWrap.appendChild(createItemCheckbox(t, i)));
-        day.f.forEach(t => fWrap.appendChild(createItemCheckbox(t, i)));
-        cardsEl.appendChild(node);
-        // after mount, restore state
-        const saved = loadDay(i);
-        if (saved){
-          const inputs = cardsEl.children[i].querySelectorAll('input[type="checkbox"]');
-          inputs.forEach((el, idx)=>{ el.checked = !!saved[idx]; });
-        }
+    // Charger l'état des cases
+    checkboxes.forEach((cb, i) => {
+      cb.checked = localStorage.getItem('day' + i) === 'true';
+      cb.addEventListener('change', () => {
+        localStorage.setItem('day' + i, cb.checked);
       });
-      updateProgress();
-    }
-
-    function updateProgress(){
-      const allChecks = [...document.querySelectorAll('input[type="checkbox"]')];
-      const done = allChecks.filter(c=>c.checked).length;
-      const pct = allChecks.length ? Math.round(done / allChecks.length * 100) : 0;
-      document.getElementById('progressBar').style.width = pct + '%';
-      document.getElementById('progressText').textContent = pct + '%';
-    }
-
-    // --- Actions ---
-    document.getElementById('printBtn').addEventListener('click', () => window.print());
-
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      if(confirm('Réinitialiser toutes les cases cochées ?')){
-        for(let i=0;i<plan.length;i++) localStorage.removeItem(keyFor(i));
-        render();
-      }
     });
 
-    let expanded = true;
-    document.getElementById('expandBtn').addEventListener('click', e => {
-      expanded = !expanded;
-      e.currentTarget.innerHTML = expanded ? '🗂️ Replier tout' : '🗂️ Déplier tout';
-      document.querySelectorAll('#cards details').forEach(d => d.open = expanded);
-    });
-
-    // init
-    render();
+    function resetChecklist() {
+      checkboxes.forEach((cb, i) => {
+        cb.checked = false;
+        localStorage.removeItem('day' + i);
+      });
+    }
   </script>
 </body>
 </html>
